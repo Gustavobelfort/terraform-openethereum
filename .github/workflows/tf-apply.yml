@@ -13,6 +13,7 @@ jobs:
     steps:
       # Checkout the code
       # Marketplace: https://github.com/marketplace/actions/checkout
+      - uses: actions/checkout@v2.1.0
       - name: "Setup - Checkout"
         uses: actions/checkout@v2.1.0
         run: ./.github/scripts/decrypt.sh
