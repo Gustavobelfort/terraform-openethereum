@@ -27,11 +27,11 @@ variable "instance_type" {
 }
 
 variable "ssh_pubkey_path" {
-  default = "$HOME/secrets/pub"
+  default = "/home/runner/secrets/pub"
 }
 
 variable "ssh_privkey_path" {
-  default = "$HOME/secrets/priv"
+  default = "/home/runner/secrets/priv"
 }
 
 variable "region" {
