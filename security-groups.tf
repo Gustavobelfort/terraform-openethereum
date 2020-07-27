@@ -1,7 +1,7 @@
 /* Default security group */
 resource "aws_security_group" "ethereum" {
-  name        = "ethereum-sg"
-  vpc_id      = "${ module.vpc.id }"
+  name   = "ethereum-sg"
+  vpc_id = module.vpc.id
 
   ingress {
     from_port   = "0"
@@ -58,3 +58,4 @@ resource "aws_security_group" "ethereum" {
     Name = "${var.application}-sg"
   }
 }
+

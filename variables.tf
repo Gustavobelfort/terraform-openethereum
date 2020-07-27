@@ -1,9 +1,9 @@
 variable "application" {
-  default = "ethereum-parity"
+  default = "openethereum"
 }
 
 variable "provisionersrc" {
-  default = "orbs-network/terraform-ethereum-node"
+  default = "gustavobelfort/openethereum-aws"
 }
 
 variable "vpc_cidr_block" {
@@ -11,17 +11,19 @@ variable "vpc_cidr_block" {
   default     = "172.31.0.0/16"
 }
 
-variable "slack_webhook_url" {}
+variable "slack_webhook_url" {
+  default = "xxxxx-x"
+}
 
 variable "eth_count" {
-  description = "The amount of Parity instances to create"
+  description = "The amount of OpenEthereum instances to create"
   default     = 1
 }
 
 //variable "vpc_id" {}
 
 variable "instance_type" {
-  default = "m5.2xlarge"
+  default = "t2.micro"
 }
 
 variable "ssh_keypath" {
@@ -33,11 +35,14 @@ variable "ssh_private_keypath" {
 }
 
 variable "region" {
-  default = "ca-central-1"
+  default = "us-east-1"
 }
 
 variable "aws_profile" {
   default = "default"
 }
 
-variable "alarms_email" {}
+variable "alarms_email" {
+  default = "gustavombelfort@gmail.com"
+}
+

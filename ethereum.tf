@@ -2,7 +2,7 @@ locals {
   ethereum_user_data = <<TFEOF
 #! /bin/bash
 
-apt-get update && apt-get install -y supervisor curl
+apt-get update && apt-get install -y supervisor curl unzip
 
 # Install Node.js
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -11,24 +11,24 @@ echo "Node.js is installed with the following versions:"
 node -v
 npm -v
 
-echo "Waiting to see if the 500G disk was mounted.."
+echo "Waiting to see if the 50G disk was mounted.."
 while true; do
   sleep 1
-  BLOCK_STORAGE_NAME=$(lsblk | grep 500G | awk '{print $1}')
+  BLOCK_STORAGE_NAME=$(lsblk | grep 50G | awk '{print $1}')
   [ ! -z "$BLOCK_STORAGE_NAME" ] && break
 done
-echo "Found the 500G SSD disk on $BLOCK_STORAGE_NAME , attempting to mount it.."
+echo "Found the 50G SSD disk on $BLOCK_STORAGE_NAME , attempting to mount it.."
 
 mkdir -p /home/root/.local
 mkfs -t xfs /dev/$BLOCK_STORAGE_NAME
 echo "/dev/$BLOCK_STORAGE_NAME /home/root/.local xfs defaults,nofail 0 0" >> /etc/fstab
 mount -a
 
-cd /home/ubuntu && curl -O https://releases.parity.io/ethereum/v2.5.13/x86_64-unknown-linux-gnu/parity
-chmod u+x parity
+cd /home/ubuntu && wget https://github.com/openethereum/openethereum/releases/download/v3.0.1/openethereum-linux-v3.0.1.zip
+unzip openethereum-linux-v3.0.1.zip
+chmod u+x openethereum
 
 (crontab -l 2>/dev/null; echo "0 */1 * * *  /usr/bin/node /home/ubuntu/check-ethereum.js ${var.slack_webhook_url} >> /var/log/manager.log") | crontab -
-(crontab -l 2>/dev/null; echo "0 0 * * *  /usr/bin/node /home/ubuntu/get-latest-parity.js ${var.slack_webhook_url} >> /var/log/manager.log") | crontab -
 
 echo "[program:healthcheck]
 command=/usr/bin/node /home/ubuntu/health.js
@@ -36,7 +36,7 @@ autostart=true
 autorestart=true" >> /etc/supervisor/conf.d/health.conf
 
 echo "[program:ethereum]
-command=/home/ubuntu/parity --chain mainnet --db-path=/home/root/.local --min-peers=45 --max-peers=60 --no-secretstore --jsonrpc-interface all --no-ipc --no-ws
+command=/home/ubuntu/openethereum --chain mainnet --db-path=/home/root/.local --min-peers=25 --max-peers=60 --no-secretstore --jsonrpc-interface all --no-ipc --no-ws
 autostart=true
 autorestart=true
 stderr_logfile=/var/log/ethereum.err.log
@@ -73,13 +73,14 @@ touch /usr/share/collectd/types.db
 amazon-cloudwatch-agent-ctl -a start
 
 TFEOF
+
 }
 
 resource "aws_instance" "ethereum" {
-  ami               = "${data.aws_ami.ubuntu-18_04.id}"
-  count             = "${var.eth_count}"
-  availability_zone = "${aws_ebs_volume.ethereum_block_storage.*.availability_zone[0]}"
-  instance_type     = "${var.instance_type}"
+  ami               = data.aws_ami.ubuntu-18_04.id
+  count             = var.eth_count
+  availability_zone = aws_ebs_volume.ethereum_block_storage[0].availability_zone
+  instance_type     = var.instance_type
 
   root_block_device {
     volume_type = "gp2"
@@ -88,16 +89,16 @@ resource "aws_instance" "ethereum" {
 
   # This machine type is chosen since we need at least 16GB of RAM for mainnet
   # and sufficent amount of networking capabilities
-  security_groups = ["${aws_security_group.ethereum.id}"]
+  security_groups = [aws_security_group.ethereum.id]
 
-  key_name  = "${aws_key_pair.deployer.key_name}"
-  subnet_id = "${module.vpc.first-subnet-id}"
+  key_name  = aws_key_pair.deployer.key_name
+  subnet_id = module.vpc.first-subnet-id
 
-  user_data = "${local.ethereum_user_data}"
+  user_data = local.ethereum_user_data
 
   provisioner "remote-exec" {
     inline = [
-      "sudo hostnamectl set-hostname ethereum-parity-${var.region}-${count.index + 1}"
+      "sudo hostnamectl set-hostname openethereum-${var.region}-${count.index + 1}",
     ]
   }
 
@@ -109,21 +110,6 @@ resource "aws_instance" "ethereum" {
   provisioner "file" {
     source      = "package.json"
     destination = "/home/ubuntu/package.json"
-  }
-
-  provisioner "file" {
-    source      = "get-latest-parity.js"
-    destination = "/home/ubuntu/get-latest-parity.js"
-  }
-
-  provisioner "file" {
-    source      = "recover-from-failed-upgrade.sh"
-    destination = "/home/ubuntu/recover-from-failed-upgrade.sh"
-  }
-
-  provisioner "file" {
-    source      = "upgrade-parity.sh"
-    destination = "/home/ubuntu/upgrade-parity.sh"
   }
 
   provisioner "file" {
@@ -142,13 +128,14 @@ resource "aws_instance" "ethereum" {
   }
 
   connection {
-    host        = "${self.public_ip}"
+    host        = self.public_ip
     type        = "ssh"
     user        = "ubuntu"
-    private_key = "${file(var.ssh_private_keypath)}"
+    private_key = file(var.ssh_private_keypath)
   }
 
   tags = {
-    Name = "ethereum-parity-${count.index + 1}"
+    Name = "openethereum-${count.index + 1}"
   }
 }
+
