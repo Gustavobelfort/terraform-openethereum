@@ -8,11 +8,17 @@ variable "provisionersrc" {
 
 variable "vpc_cidr_block" {
   description = "The VPC CIDR address range"
-  default     = "172.31.0.0/16"
+  default     = "10.0.0.0/16"
 }
 
-variable "slack_webhook_url" {
-  default = "xxxxx-x"
+variable "public_subnet_cidr" {
+  description = "CIDR for the Public Subnet"
+  default     = "10.0.0.0/24"
+}
+
+variable "private_subnet_cidr" {
+  description = "CIDR for the Private Subnet"
+  default     = "10.0.1.0/24"
 }
 
 variable "eth_count" {
