@@ -26,8 +26,12 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
-variable "ssh_keypath" {
-  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDW8oQUXzzXbHwE24WnuOqiJAmSPHl/IGHpMaK1mdIyA8b7R1mGM8MAyTNO7oqmu6E9nygAFr6nZ+D1FO3eiX9uV2I3VnLOg9cdz+9TP90g3FqQQhLrpjxX3+zKLlWvMoS530EW0eIVcG7ZJ4BeuumaetVK+TZphcHx811QCsCAEmV7Fxatcant9ATWFSHC+pNybW/uemwxRNdR7nAG4R2/+jdqpTPnnCn0F9ENOml14N2y76LOO+BrVtrmtUFeYGH6u8NSN9wQJ55Q0Un/5oDf7CUvl+QxnEr5x5bfKi9goVYNbjow8QcBT4daEadBZ3pAyM33e8FYGa+IDFW23tpR gustavobelfort@byte"
+variable "ssh_pubkey_path" {
+  default = "$HOME/secrets/pub"
+}
+
+variable "ssh_privkey_path" {
+  default = "$HOME/secrets/priv"
 }
 
 variable "region" {

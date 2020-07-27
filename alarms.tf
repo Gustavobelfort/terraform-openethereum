@@ -105,31 +105,3 @@ resource "aws_cloudwatch_metric_alarm" "health" {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "custom_healthcheck" {
-  count               = var.eth_count
-  alarm_name          = "parity-ethereum-${var.region}-${count.index + 1}-sync"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = "1"
-  metric_name         = "Errors"
-  namespace           = "AWS/Lambda"
-  period              = "1800"
-  statistic           = "Sum"
-  threshold           = "0"
-  alarm_description   = "Checks Parity sync status through the HTTP healthcheck"
-  treat_missing_data  = "ignore"
-
-  alarm_actions = [aws_sns_topic.alarm.arn]
-  ok_actions    = [aws_sns_topic.alarm.arn]
-
-  dimensions = {
-    FunctionName = element(
-      aws_lambda_function.check_parity_sync.*.function_name,
-      count.index,
-    )
-    Resource = element(
-      aws_lambda_function.check_parity_sync.*.function_name,
-      count.index,
-    )
-  }
-}
-

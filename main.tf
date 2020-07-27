@@ -13,7 +13,7 @@ module "vpc" {
   application    = var.application
   provisionersrc = var.provisionersrc
 
-  azs  = data.aws_availability_zones.available.names
+  azs  = data.aws_availability_zones.available.names[0]
   cidr = var.vpc_cidr_block
 }
 
