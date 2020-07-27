@@ -8,6 +8,8 @@
 # .tfvars files
 *.tfvars
 
+.DS_Store
+
 node_modules/
 check-parity-sync-lambda/node_modules/
 
