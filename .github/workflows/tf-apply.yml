@@ -37,7 +37,4 @@ jobs:
 
       # Auto-approve prevents the requirement of human interaction
       - name: "Run - Terraform Apply"
-        run: terraform apply -input=false -auto-approve
-        env:
-          TF_VAR_ssh_pubkey: ${{ secrets.SSH_PUB_KEY }}
-          TF_VAR_ssh_privkey: ${{ secrets.SSH_PRIV_KEY }}
+        run: terraform apply -input=false -auto-approve -var="ssh_pubkey=${{ secrets.SSH_PUB_KEY }}" -var="ssh_privkey=${{ secrets.SSH_PRIV_KEY }}"
