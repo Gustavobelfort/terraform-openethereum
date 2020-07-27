@@ -14,11 +14,6 @@ jobs:
       - name: "Setup - Checkout"
         uses: actions/checkout@v2.1.0
 
-      - name: "Decrypt Keys"
-        run: ./.github/scripts/decrypt.sh
-        env:
-          SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
-          SSH_PRIV_KEY: ${{ secrets.SSH_PRIV_KEY }}
       # Static analysis of Terraform templates to spot potential security issues
       # Marketplace: https://github.com/marketplace/actions/terraform-security-scan
       - name: "Setup - Security Scan"
@@ -50,6 +45,9 @@ jobs:
       - name: "Run - Terraform Plan"
         id: plan
         run: terraform plan -input=false -no-color
+        env:
+          TF_VAR_ssh_pubkey: ${{ secrets.SSH_PUB_KEY }}
+          TF_VAR_ssh_privkey: ${{ secrets.SSH_PRIV_KEY }}
 
       # Submit a comment with the plan output to the pull request
       - name: "Run - Terraform Comment"

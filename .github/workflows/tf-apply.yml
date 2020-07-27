@@ -16,11 +16,6 @@ jobs:
       - name: "Setup - Checkout"
         uses: actions/checkout@v2.1.0
 
-      - name: "Decrypt Keys"
-        run: ./.github/scripts/decrypt.sh
-        env:
-          SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
-          SSH_PRIV_KEY: ${{ secrets.SSH_PRIV_KEY }}
       # Provides AWS credentials to Terraform
       # By default, Terraform checks the home directory for a .aws folder with a credential file
       # Documentation: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/create-shared-credentials-file.html
@@ -43,3 +38,6 @@ jobs:
       # Auto-approve prevents the requirement of human interaction
       - name: "Run - Terraform Apply"
         run: terraform apply -input=false -auto-approve
+        env:
+          TF_VAR_ssh_pubkey: ${{ secrets.SSH_PUB_KEY }}
+          TF_VAR_ssh_privkey: ${{ secrets.SSH_PRIV_KEY }}

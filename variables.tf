@@ -26,12 +26,12 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
-variable "ssh_pubkey_path" {
-  default = "/home/runner/secrets/pub"
+variable "ssh_pubkey" {
+  default = ""
 }
 
-variable "ssh_privkey_path" {
-  default = "/home/runner/secrets/priv"
+variable "ssh_privkey" {
+  default = ""
 }
 
 variable "region" {

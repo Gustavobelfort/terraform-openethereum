@@ -38,7 +38,7 @@ resource "aws_instance" "ethereum" {
       host        = self.public_ip
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file(var.ssh_privkey_path)
+      private_key = var.ssh_privkey
     }
 
   # provisioner "file" {
