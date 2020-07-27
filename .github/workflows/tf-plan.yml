@@ -11,8 +11,10 @@ jobs:
     steps:
       # Checkout the code
       # Marketplace: https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v2.1.0
       - name: "Setup - Checkout"
+        uses: actions/checkout@v2.1.0
+
+      - name: "Decrypt Keys"
         run: ./.github/scripts/decrypt.sh
         env:
           SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
