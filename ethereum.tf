@@ -127,13 +127,6 @@ resource "aws_instance" "ethereum" {
     destination = "/home/ubuntu/ethereum-lib.js"
   }
 
-  connection {
-    host        = self.public_ip
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = file(var.ssh_private_keypath)
-  }
-
   tags = {
     Name = "openethereum-${count.index + 1}"
   }
