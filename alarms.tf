@@ -1,4 +1,4 @@
-resource "aws_sns_topic" "alarm" {
+resource "aws_sns_topic" "alarm" { #tfsec:ignore:AWS016
   name = "parity-ethereum-alarms"
 
   delivery_policy = <<EOF
@@ -21,9 +21,6 @@ resource "aws_sns_topic" "alarm" {
 }
 EOF
 
-
-  // This runs on your local machine since Terraform doesn't allow creating email subscriptions.
-  // This runs on your local machine since Terraform doesn't allow creating email subscriptions.
   provisioner "local-exec" {
     command = "aws sns subscribe --region ${var.region} --topic-arn ${self.arn} --protocol email --notification-endpoint ${var.alarms_email}"
   }
