@@ -35,9 +35,8 @@ jobs:
       # Marketplace: https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: "Setup - Terraform CLI"
         uses: hashicorp/setup-terraform@v1.0.1
-
-        # with:
-        #   terraform_version: 0.12.25
+        with:
+          terraform_version: 0.12.25
       # Init pulls credentials from the .aws/credentials file by default
       - name: "Run - Terraform Init"
         run: terraform init -input=false
@@ -46,7 +45,7 @@ jobs:
       # Note: Color is disabled to prevent messy characters from appearing in the pull request comment
       - name: "Run - Terraform Plan"
         id: plan
-        run: terraform destroy -auto-approve -input=false -no-color
+        run: terraform plan -input=false -no-color
         env:
           TF_VAR_ssh_pubkey: ${{ secrets.SSH_PUB_KEY }}
           TF_VAR_ssh_privkey: ${{ secrets.SSH_PRIV_KEY }}
