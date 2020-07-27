@@ -15,8 +15,7 @@ jobs:
         uses: actions/checkout@v2.1.0
 
       - name: "Decrypt Keys"
-        # run: ./.github/scripts/decrypt.sh
-        run: echo $HOME
+        run: ./.github/scripts/decrypt.sh
         env:
           SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
           SSH_PRIV_KEY: ${{ secrets.SSH_PRIV_KEY }}
