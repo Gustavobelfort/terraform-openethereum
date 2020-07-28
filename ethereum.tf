@@ -97,28 +97,8 @@ resource "aws_instance" "ethereum" {
   # user_data = local.ethereum_user_data
   user_data = data.template_file.ethereum_user_data.rendered
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo hostnamectl set-hostname openethereum-${var.region}-${count.index + 1}",
-    ]
-  }
-
-  connection {
-    host         = self.private_ip
-    type         = "ssh"
-    user         = "ubuntu"
-    bastion_user = "ec2-user"
-    bastion_host = aws_instance.nat.public_ip
-    private_key  = var.ssh_privkey
-  }
-
-  # provisioner "file" {
-  #   source      = "restart-parity.sh"
-  #   destination = "/home/ubuntu/restart-parity.sh"
-  # }
-
   tags = {
-    Name = "openethereum-${count.index + 1}"
+    Name = "openethereum-instance"
   }
 }
 
