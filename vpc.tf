@@ -54,7 +54,7 @@ resource "aws_security_group" "nat" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:AWS009
   }
   egress {
     from_port   = 30303
@@ -98,14 +98,14 @@ resource "aws_security_group" "nat" {
 }
 
 resource "aws_instance" "nat" {
-  ami                         = "ami-00a9d4a05375b2763" # this is a special ami preconfigured to do NAT
-  availability_zone           = "us-east-1a"
-  instance_type               = "t2.micro"
-  key_name                    = aws_key_pair.deployer.key_name
-  vpc_security_group_ids      = [aws_security_group.nat.id]
-  subnet_id                   = aws_subnet.us-east-1a-public.id
-  associate_public_ip_address = true
-  source_dest_check           = false
+  ami                    = "ami-00a9d4a05375b2763" # this is a special ami preconfigured to do NAT
+  availability_zone      = "us-east-1a"
+  instance_type          = "t2.micro"
+  key_name               = aws_key_pair.deployer.key_name
+  vpc_security_group_ids = [aws_security_group.nat.id]
+  subnet_id              = aws_subnet.us-east-1a-public.id
+  # associate_public_ip_address = true
+  source_dest_check = false
 
   tags = {
     Provisioner    = "terraform"
