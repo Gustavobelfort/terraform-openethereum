@@ -130,5 +130,6 @@ data "template_file" "ethereum_user_data" {
     network           = "mainnet"
     cloudwatch_id     = aws_iam_access_key.cloudwatch.id
     cloudwatch_secret = aws_iam_access_key.cloudwatch.secret
+    nat_ip            = aws_instance.nat.public_ip
   }
 }

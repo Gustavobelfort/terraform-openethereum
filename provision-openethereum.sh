@@ -46,3 +46,4 @@ sudo docker run -d --name ethereum-node --restart always -v ${dir}:/root \
      -p 8545:8545 -p 8546:8546 -p 30303:30303 \
      openethereum/openethereum:latest --chain ${network} \
      --jsonrpc-interface=all --jsonrpc-apis=safe \
+     --nat=extip:${nat_ip}
