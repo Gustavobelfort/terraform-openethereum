@@ -6,8 +6,12 @@ variable "provisionersrc" {
   default = "gustavobelfort/openethereum-aws"
 }
 
-variable "vpc_cidr_block" {
-  description = "The VPC CIDR address range"
+variable "name" {
+  default = "openethereum"
+}
+
+variable "vpc_cidr" {
+  description = "CIDR for the whole VPC"
   default     = "10.0.0.0/16"
 }
 
