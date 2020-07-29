@@ -1,5 +1,6 @@
 resource "aws_security_group" "lambda" {
-  name = "all"
+  name        = "lambda-sg"
+  description = "Security group for the lambda rpc monitoring"
 
   ingress {
     from_port   = 0
