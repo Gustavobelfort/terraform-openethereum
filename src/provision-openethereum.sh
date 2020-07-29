@@ -32,10 +32,10 @@ output=json" >> ~/.aws/config
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
 
 dpkg -i -E ./amazon-cloudwatch-agent.deb
-wget https://raw.githubusercontent.com/orbs-network/terraform-ethereum-node/master/cloudwatch-agent-config.json
+wget https://gist.githubusercontent.com/Gustavobelfort/689804d38164b09dbb011d67d3d79b5d/raw/ebca848dfabc1459f1aba4dddc48281bc39f167f/cloudwatch-agent-config.json
 mv cloudwatch-agent-config.json /etc/
 
-wget https://raw.githubusercontent.com/orbs-network/terraform-ethereum-node/master/cloudwatch-common-config.toml
+wget https://gist.githubusercontent.com/Gustavobelfort/ebd1f2f8b960f10c5ece76565fe6c2ad/raw/beea6b29dcb16a66dadcac6f6ac9ba43a5f972af/cloudwatch-common-config.toml
 mv cloudwatch-common-config.toml /opt/aws/amazon-cloudwatch-agent/etc/common-config.toml
 
 mkdir -p /usr/share/collectd/
@@ -44,8 +44,8 @@ touch /usr/share/collectd/types.db
 /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a append-config -m ec2 -c file:/etc/cloudwatch-agent-config.json -s
 amazon-cloudwatch-agent-ctl -a start
 
-sudo docker run -d --name ethereum-node --restart always -v ${dir}:/root \
+sudo docker run -d --name ethereum-node --restart always -v ${dir}:/home/openethereum/.local/share/openethereum/ \
      -p 8545:8545 -p 8546:8546 -p 30303:30303 \
      openethereum/openethereum:latest --chain ${network} \
      --jsonrpc-interface=all --jsonrpc-apis=safe \
-     --nat=extip:${nat_ip}
+     --nat=extip:${nat_ip} --light

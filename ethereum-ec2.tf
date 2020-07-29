@@ -102,8 +102,18 @@ resource "aws_instance" "ethereum" {
   }
 }
 
+data "aws_ami" "ubuntu-18_04" {
+  most_recent = true
+  owners      = [var.ubuntu_account_number]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
+}
+
 data "template_file" "ethereum_user_data" {
-  template = file("./provision-openethereum.sh")
+  template = file("./src/provision-openethereum.sh")
   vars = {
     dir               = "/home/ubuntu/ethereum"
     region            = var.region

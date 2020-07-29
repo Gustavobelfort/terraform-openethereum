@@ -3,7 +3,7 @@ variable "application" {
 }
 
 variable "provisionersrc" {
-  default = "gustavobelfort/openethereum-aws"
+  default = "gustavobelfort/terraform-openethereum"
 }
 
 variable "name" {
@@ -30,7 +30,9 @@ variable "eth_count" {
   default     = 1
 }
 
-//variable "vpc_id" {}
+variable "ubuntu_account_number" {
+  default = "099720109477"
+}
 
 variable "instance_type" {
   default = "t2.micro"

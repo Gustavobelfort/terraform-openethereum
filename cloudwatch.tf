@@ -56,16 +56,16 @@ resource "aws_cloudwatch_metric_alarm" "disk" {
   period              = "60"
   statistic           = "Average"
   threshold           = "80"
-  alarm_description   = "This metric monitors the disk space for the EBS holding the blockchain data"
+  alarm_description   = "This metric monitors the disk space holding the blockchain data"
   alarm_actions       = [aws_sns_topic.alarm.arn]
 
   dimensions = {
-    path         = "/home/root/.local"
+    path         = "/"
     InstanceId   = aws_instance.ethereum[count.index].id
     InstanceType = var.instance_type
     ImageId      = data.aws_ami.ubuntu-18_04.id
-    device       = "nvme2n1"
-    fstype       = "xfs"
+    device       = "xvda1"
+    fstype       = "ext4"
   }
 }
 
@@ -105,3 +105,49 @@ resource "aws_cloudwatch_metric_alarm" "health" {
   }
 }
 
+resource "aws_iam_user" "cloudwatch" {
+  name = "cloudwatch-reporter-${var.application}"
+  path = "/system/"
+
+  tags = {
+    tag-key = "cloudwatch-reporter-${var.application}"
+  }
+}
+
+resource "aws_iam_access_key" "cloudwatch" {
+  user = aws_iam_user.cloudwatch.name
+}
+
+resource "aws_iam_user_policy" "cloudwatch_role" {
+  name = "cloudwatch-reporter-policy"
+  user = aws_iam_user.cloudwatch.name
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:PutMetricData",
+                "ec2:DescribeTags",
+                "logs:PutLogEvents",
+                "logs:DescribeLogStreams",
+                "logs:DescribeLogGroups",
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameter"
+            ],
+            "Resource": "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
+        }
+    ]
+}
+EOF
+
+}
