@@ -47,8 +47,9 @@ This deployment also features a <a href="https://github.com/Gustavobelfort/opene
 ## File Structure
 
 The repository file structure and resources each file manages is as follow:
+<p align="center">
 <img src="./static/structure.png" />
-
+</p>
 ## Running locally
 This repository is not planned to be run locally but you can do so by:
 
