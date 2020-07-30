@@ -57,9 +57,9 @@ This repository is not planned to be run locally but you can do so by:
 1.  <a href="https://learn.hashicorp.com/terraform/getting-started/install.html">Installing terraform</a>
 2. Storing your personal private and public ssh keys into the `ssh_pubkey` and `ssh_privkey` env vars
 3. Issuing:
-        - `terraform init`
-        - `terraform plan`
-        - `terraform apply -input=false -auto-approve -var="ssh_pubkey=${ssh_pubkey}" -var="ssh_privkey=${ssh_privkey}"`
+    - `terraform init`
+    - `terraform plan`
+    - `terraform apply -input=false -auto-approve -var="ssh_pubkey=${ssh_pubkey}" -var="ssh_privkey=${ssh_privkey}"`
 
 
 ## Contributors
